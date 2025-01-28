@@ -1,0 +1,6 @@
+@CodeJournalApi_HostAddress = http://localhost:5099
+
+GET {{CodeJournalApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
