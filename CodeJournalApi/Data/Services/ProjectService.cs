@@ -1,15 +1,16 @@
-using CodeJournalApi.Data.DataModels;
+using CodeJournalApi.Entities;
+using CodeJournalApi.DTOs;
 using CodeJournalApi.Data.Repositories;
 
 namespace CodeJournalApi.Data.Services
 {
     public interface IProjectService
     {
-        Task<IEnumerable<Project>> GetProjects();
+        Task<IEnumerable<ProjectDTO>> GetProjects();
         Task<Project> GetProjectById(int id);
         Task InsertProject(Project project);
-        // void DeleteProject();
-        // void UpdateProject();
+        Task DeleteProject(int id);
+        Task UpdateProject(Project project);
         // void Save();
     }
 
@@ -22,9 +23,24 @@ namespace CodeJournalApi.Data.Services
             _projectRepo = projectRepo;
         }
 
-        public async Task<IEnumerable<Project>> GetProjects()
+        public async Task<IEnumerable<ProjectDTO>> GetProjects()
         {
-            return await _projectRepo.GetProjects();
+            IEnumerable<Project> projectEntities = await _projectRepo.GetProjects();
+            List<ProjectDTO> projectDTOs = new List<ProjectDTO>();
+
+            foreach (Project project in projectEntities)
+            {
+                ProjectDTO dto = new ProjectDTO
+                {
+                    Title = project.Title,
+                    Language = project.Language,
+                    Description = project.Description
+                };
+
+                projectDTOs.Add(dto);
+            }
+
+            return projectDTOs;
         }
 
         public async Task<Project> GetProjectById(int id)
@@ -35,6 +51,16 @@ namespace CodeJournalApi.Data.Services
         public async Task InsertProject(Project project)
         {
             await _projectRepo.InsertProject(project);
+        }
+
+        public async Task UpdateProject(Project project)
+        {
+            await _projectRepo.UpdateProject(project);
+        }
+
+        public async Task DeleteProject(int id)
+        {
+            await _projectRepo.DeleteProject(id);
         }
     }
 }

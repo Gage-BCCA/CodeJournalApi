@@ -1,4 +1,4 @@
-using CodeJournalApi.Data.DataModels;
+using CodeJournalApi.Entities;
 using Dapper;
 
 namespace CodeJournalApi.Data.Repositories
@@ -8,8 +8,8 @@ namespace CodeJournalApi.Data.Repositories
         Task<IEnumerable<Project>> GetProjects();
         Task<Project> GetProjectById(int id);
         Task InsertProject(Project project);
-        // void DeleteProject();
-        // void UpdateProject();
+        Task DeleteProject(int id);
+        Task UpdateProject(Project project);
         // void Save();
     }
 
@@ -27,10 +27,9 @@ namespace CodeJournalApi.Data.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 SELECT *
-                FROM Project
+                FROM Projects
             ";
             return await connection.QueryAsync<Project>(sql);
-
         }
 
         public async Task<Project> GetProjectById(int id)
@@ -38,7 +37,7 @@ namespace CodeJournalApi.Data.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 SELECT *
-                FROM Project
+                FROM Projects
                 WHERE ProjectId = @id
             ";
             return await connection.QuerySingleAsync<Project>(sql, new { id });
@@ -48,10 +47,31 @@ namespace CodeJournalApi.Data.Repositories
         {
             using var connection = _context.CreateConnection();
             var sql = @"
-                INSERT INTO Project (Title, Language, Description)
+                INSERT INTO Projects (Title, Language, Description)
                 VALUES (@Title, @Language, @Description)
             ";
             await connection.ExecuteAsync(sql, project);
+        }
+
+        public async Task UpdateProject(Project project)
+        {
+            using var connection = _context.CreateConnection();
+            var sql = @"
+                UPDATE Projects
+                SET Title=@Title, Language=@Language, Description=@Description
+                WHERE ProjectId=@ProjectId
+            ";
+            await connection.ExecuteAsync(sql, project);
+        }
+
+        public async Task DeleteProject(int id)
+        {
+            using var connection = _context.CreateConnection();
+            var sql = @"
+                DELETE FROM Projects
+                WHERE ProjectId=@ProjectId
+            ";
+            await connection.ExecuteAsync(sql, new { ProjectId=id });
         }
     }
 }

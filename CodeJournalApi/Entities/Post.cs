@@ -1,4 +1,4 @@
-namespace CodeJournalApi.Data.DataModels
+namespace CodeJournalApi.Entities
 {
     class Post
     {

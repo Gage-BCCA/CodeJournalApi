@@ -1,4 +1,4 @@
-using CodeJournalApi.Data.DataModels;
+using CodeJournalApi.Entities;
 using CodeJournalApi.Data.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +39,26 @@ namespace CodeJournalApi.Controllers
 
             await _projectService.InsertProject(project);
             return Ok(new { message = "Project Created" });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProject([FromBody] Project project, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            project.ProjectId = id;
+            await _projectService.UpdateProject(project);
+            return Ok(new { status="success", message = "Project Updated"});
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            await _projectService.DeleteProject(id);
+            return Ok(new { status="success", message = "Project Deleted"});
         }
     }
 }
