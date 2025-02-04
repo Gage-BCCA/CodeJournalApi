@@ -2,11 +2,11 @@ namespace CodeJournalApi.Data.Interfaces
 {
     public interface IRepository<T> 
     {
-        Task<IEnumerable<T>> GetProjects();
-        Task<T> GetProjectById(int id);
-        Task InsertProject(T newObject);
-        Task DeleteProject(int id);
-        Task UpdateProject(T targetObject);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> GetById(int id);
+        Task Insert(T newObject);
+        Task Delete(int id);
+        Task Update(T targetObject);
         // void Save();
     }
 }

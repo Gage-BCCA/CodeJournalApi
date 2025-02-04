@@ -13,7 +13,7 @@ namespace CodeJournalApi.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Project>> GetProjects()
+        public async Task<IEnumerable<Project>> GetAll()
         {
             using var connection = _context.CreateConnection();
             var sql = @"
@@ -23,7 +23,7 @@ namespace CodeJournalApi.Data.Repositories
             return await connection.QueryAsync<Project>(sql);
         }
 
-        public async Task<Project> GetProjectById(int id)
+        public async Task<Project> GetById(int id)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
@@ -34,7 +34,7 @@ namespace CodeJournalApi.Data.Repositories
             return await connection.QuerySingleAsync<Project>(sql, new { id });
         }
 
-        public async Task InsertProject(Project project)
+        public async Task Insert(Project project)
         {
             using var connection = _context.CreateConnection();
             project.DateCreated = DateTime.Now;
@@ -46,7 +46,7 @@ namespace CodeJournalApi.Data.Repositories
             await connection.ExecuteAsync(sql, project);
         }
 
-        public async Task UpdateProject(Project project)
+        public async Task Update(Project project)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
@@ -57,7 +57,7 @@ namespace CodeJournalApi.Data.Repositories
             await connection.ExecuteAsync(sql, project);
         }
 
-        public async Task DeleteProject(int id)
+        public async Task Delete(int id)
         {
             using var connection = _context.CreateConnection();
             var sql = @"

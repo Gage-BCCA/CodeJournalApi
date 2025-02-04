@@ -15,6 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IRepository<Project>, ProjectRepository>();
 builder.Services.AddScoped<IService<ProjectDTO>, ProjectService>();
+builder.Services.AddScoped<IRepository<Post>, PostRepository>();
+builder.Services.AddScoped<IService<PostDTO>, PostService>();
 
 var app = builder.Build();
 

@@ -14,10 +14,10 @@ namespace CodeJournalApi.Data.Services
             _projectRepo = projectRepo;
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetProjects()
+        public async Task<IEnumerable<ProjectDTO>> GetAll()
         {
             // Get All Project Entities and convert to Project DTOs
-            IEnumerable<Project> projectEntities = await _projectRepo.GetProjects();
+            IEnumerable<Project> projectEntities = await _projectRepo.GetAll();
             List<ProjectDTO> projectDTOs = new List<ProjectDTO>();
 
             foreach (Project project in projectEntities)
@@ -36,10 +36,10 @@ namespace CodeJournalApi.Data.Services
             return projectDTOs;
         }
 
-        public async Task<ProjectDTO> GetProjectById(int id)
+        public async Task<ProjectDTO> GetById(int id)
         {
             // Get Project Entity and Convert to DTO
-            Project project = await _projectRepo.GetProjectById(id);
+            Project project = await _projectRepo.GetById(id);
             ProjectDTO dto = new ProjectDTO
             {
                 ProjectId = project.ProjectId,
@@ -50,7 +50,7 @@ namespace CodeJournalApi.Data.Services
             return dto;
         }
 
-        public async Task InsertProject(ProjectDTO projectDto)
+        public async Task Insert(ProjectDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
@@ -61,10 +61,10 @@ namespace CodeJournalApi.Data.Services
                 Description = projectDto.Description
             };
 
-            await _projectRepo.InsertProject(project);
+            await _projectRepo.Insert(project);
         }
 
-        public async Task UpdateProject(ProjectDTO projectDto)
+        public async Task Update(ProjectDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
@@ -74,12 +74,12 @@ namespace CodeJournalApi.Data.Services
                 Language = projectDto.Language,
                 Description = projectDto.Description
             };
-            await _projectRepo.UpdateProject(project);
+            await _projectRepo.Update(project);
         }
 
-        public async Task DeleteProject(int id)
+        public async Task Delete(int id)
         {
-            await _projectRepo.DeleteProject(id);
+            await _projectRepo.Delete(id);
         }
     }
 }
