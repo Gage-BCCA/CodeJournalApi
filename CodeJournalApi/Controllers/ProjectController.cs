@@ -1,6 +1,7 @@
 using CodeJournalApi.Entities;
-using CodeJournalApi.Data.Services;
+using CodeJournalApi.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using CodeJournalApi.Data.Interfaces;
 
 namespace CodeJournalApi.Controllers
 {
@@ -8,9 +9,9 @@ namespace CodeJournalApi.Controllers
     [Route("[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private IProjectService _projectService;
+        private IService<ProjectDTO> _projectService;
 
-        public ProjectsController(IProjectService projectService)
+        public ProjectsController(IService<ProjectDTO> projectService)
         {
             _projectService = projectService;
         }
@@ -30,27 +31,27 @@ namespace CodeJournalApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertProject([FromBody] Project project)
+        public async Task<IActionResult> InsertProject([FromBody] ProjectDTO projectDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await _projectService.InsertProject(project);
+            await _projectService.InsertProject(projectDto);
             return Ok(new { message = "Project Created" });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject([FromBody] Project project, int id)
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectDTO projectDto, int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            project.ProjectId = id;
-            await _projectService.UpdateProject(project);
+            projectDto.ProjectId = id;
+            await _projectService.UpdateProject(projectDto);
             return Ok(new { status="success", message = "Project Updated"});
         }
 

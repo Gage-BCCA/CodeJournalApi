@@ -1,6 +1,9 @@
 using CodeJournalApi.Data;
+using CodeJournalApi.Data.Interfaces;
 using CodeJournalApi.Data.Repositories;
 using CodeJournalApi.Data.Services;
+using CodeJournalApi.DTOs;
+using CodeJournalApi.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +13,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<Context>();
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
-builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IRepository<Project>, ProjectRepository>();
+builder.Services.AddScoped<IService<ProjectDTO>, ProjectService>();
 
 var app = builder.Build();
 

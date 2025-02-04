@@ -1,19 +1,10 @@
+using CodeJournalApi.Data.Interfaces;
 using CodeJournalApi.Entities;
 using Dapper;
 
 namespace CodeJournalApi.Data.Repositories
 {
-    public interface IProjectRepository
-    {
-        Task<IEnumerable<Project>> GetProjects();
-        Task<Project> GetProjectById(int id);
-        Task InsertProject(Project project);
-        Task DeleteProject(int id);
-        Task UpdateProject(Project project);
-        // void Save();
-    }
-
-    public class ProjectRepository: IProjectRepository
+    public class ProjectRepository: IRepository<Project>
     {
         private Context _context;
 
@@ -46,9 +37,11 @@ namespace CodeJournalApi.Data.Repositories
         public async Task InsertProject(Project project)
         {
             using var connection = _context.CreateConnection();
+            project.DateCreated = DateTime.Now;
+            project.Status = "Created";
             var sql = @"
-                INSERT INTO Projects (Title, Language, Description)
-                VALUES (@Title, @Language, @Description)
+                INSERT INTO Projects (Title, Language, Description, DateCreated, Status)
+                VALUES (@Title, @Language, @Description, @DateCreated, @Status)
             ";
             await connection.ExecuteAsync(sql, project);
         }
