@@ -1,7 +1,6 @@
-using CodeJournalApi.Entities;
+using CodeJournalApi.Data.Services;
 using CodeJournalApi.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using CodeJournalApi.Data.Interfaces;
 
 namespace CodeJournalApi.Controllers
 {
@@ -9,17 +8,17 @@ namespace CodeJournalApi.Controllers
     [Route("[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private IService<ProjectDTO> _projectService;
+        private IProjectService _projectService;
 
-        public ProjectsController(IService<ProjectDTO> projectService)
+        public ProjectsController(IProjectService projectService)
         {
             _projectService = projectService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await _projectService.GetProjects();
+            var projects = await _projectService.GetAllProjects();
             return Ok(projects);
         }
 

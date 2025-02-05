@@ -1,23 +1,32 @@
 using CodeJournalApi.Entities;
 using CodeJournalApi.DTOs;
-using CodeJournalApi.Data.Interfaces;
+using CodeJournalApi.Data.Repositories;
 
 namespace CodeJournalApi.Data.Services
 {
 
-    public class ProjectService: IService<ProjectDTO>
+    public interface IProjectService
     {
-        private IRepository<Project> _projectRepo;
+        Task<IEnumerable<ProjectDTO>> GetAllProjects();
+        Task<ProjectDTO> GetProjectById(int id);
+        Task InsertProject(ProjectDTO newObject);
+        Task DeleteProject(int id);
+        Task UpdateProject(ProjectDTO targetObject);
+        // void Save();
+    }
+    public class ProjectService: IProjectService
+    {
+        private IProjectRepository _projectRepo;
 
-        public ProjectService(IRepository<Project> projectRepo)
+        public ProjectService(IProjectRepository projectRepo)
         {
             _projectRepo = projectRepo;
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAll()
+        public async Task<IEnumerable<ProjectDTO>> GetAllProjects()
         {
             // Get All Project Entities and convert to Project DTOs
-            IEnumerable<Project> projectEntities = await _projectRepo.GetAll();
+            IEnumerable<Project> projectEntities = await _projectRepo.GetAllProjects();
             List<ProjectDTO> projectDTOs = new List<ProjectDTO>();
 
             foreach (Project project in projectEntities)
@@ -36,7 +45,7 @@ namespace CodeJournalApi.Data.Services
             return projectDTOs;
         }
 
-        public async Task<ProjectDTO> GetById(int id)
+        public async Task<ProjectDTO> GetProjectById(int id)
         {
             // Get Project Entity and Convert to DTO
             Project project = await _projectRepo.GetById(id);
@@ -50,7 +59,7 @@ namespace CodeJournalApi.Data.Services
             return dto;
         }
 
-        public async Task Insert(ProjectDTO projectDto)
+        public async Task InsertProject(ProjectDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
@@ -61,10 +70,10 @@ namespace CodeJournalApi.Data.Services
                 Description = projectDto.Description
             };
 
-            await _projectRepo.Insert(project);
+            await _projectRepo.InsertProject(project);
         }
 
-        public async Task Update(ProjectDTO projectDto)
+        public async Task UpdateProject(ProjectDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
@@ -74,12 +83,12 @@ namespace CodeJournalApi.Data.Services
                 Language = projectDto.Language,
                 Description = projectDto.Description
             };
-            await _projectRepo.Update(project);
+            await _projectRepo.UpdateProject(project);
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteProject(int id)
         {
-            await _projectRepo.Delete(id);
+            await _projectRepo.DeleteProject(id);
         }
     }
 }

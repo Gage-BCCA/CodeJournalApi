@@ -1,11 +1,11 @@
 namespace CodeJournalApi.Entities
 {
-    class Post
+    public class Post
     {
         public int PostId { get; set; }
-        public String Title { get; set; }
-        public String Blurb { get; set; }
-        public String Content {get; set; }
+        public string Title { get; set; }
+        public string Blurb { get; set; }
+        public string Content {get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
         public string Slug { get; set; }
@@ -13,6 +13,7 @@ namespace CodeJournalApi.Entities
         public int DislikeCount { get; set; }
         public string Status { get; set; }
         public int ParentProjectId { get; set; }
+        public string ParentProjectTitle { get; set; }
 
         public Post() {} 
 

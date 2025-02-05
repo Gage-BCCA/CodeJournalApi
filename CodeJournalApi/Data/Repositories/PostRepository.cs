@@ -1,12 +1,20 @@
 using Dapper;
 using CodeJournalApi.Entities;
-using CodeJournalApi.Data.Interfaces;
 
 namespace CodeJournalApi.Data.Repositories
 {
     
-    
-    public class PostRepository : IRepository<Post>
+    public interface IPostRepository
+    {
+        Task<IEnumerable<Post>> GetAllPosts();
+        Task<Post> GetPostById(int id);
+        Task InsertPost(Post post);
+        Task DeletePost(int id);
+        Task UpdatePost(Post post);
+        // void Save();
+    }
+
+    public class PostRepository : IPostRepository
     {
         private Context _context;
 
@@ -15,28 +23,47 @@ namespace CodeJournalApi.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Post>> GetAll()
+        public async Task<IEnumerable<Post>> GetAllPosts()
         {
             using var connection = _context.CreateConnection();
             var sql = @"
-                SELECT *
-                FROM Posts
+                SELECT  Posts.PostId,
+                        Posts.Title,
+                        Posts.Blurb,
+                        Posts.Content,
+                        Posts.DateCreated,
+                        Posts.LikeCount,
+                        Posts.DislikeCount,
+                        Projects.ProjectId as ParentProjectId,
+                        Projects.Title as ParentProjectTitle
+
+                  FROM  Posts
+                 INNER  JOIN Projects ON Posts.ParentProjectId = Projects.ProjectId;
             ";
             return await connection.QueryAsync<Post>(sql);
         }
 
-        public async Task<Post> GetById(int id)
+        public async Task<Post> GetPostById(int id)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
-                SELECT *
+                SELECT  Posts.PostId,
+                        Posts.Title,
+                        Posts.Blurb,
+                        Posts.Content,
+                        Posts.DateCreated,
+                        Posts.LikeCount,
+                        Posts.DislikeCount,
+                        Projects.ProjectId as ParentProjectId,
+                        Projects.Title as ParentProjectTitle
                 FROM Posts
+                INNER JOIN Projects ON Posts.ParentProjectId = Projects.ProjectId
                 WHERE PostId = @id
             ";
             return await connection.QuerySingleAsync<Post>(sql, new { id });
         }
 
-        public async Task Insert(Post post)
+        public async Task InsertPost(Post post)
         {
             using var connection = _context.CreateConnection();
             post.DateCreated = DateTime.Now;
@@ -48,7 +75,7 @@ namespace CodeJournalApi.Data.Repositories
             await connection.ExecuteAsync(sql, post);
         }
 
-        public async Task Update(Post post)
+        public async Task UpdatePost(Post post)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
@@ -59,7 +86,7 @@ namespace CodeJournalApi.Data.Repositories
             await connection.ExecuteAsync(sql, post);
         }
 
-        public async Task Delete(int id)
+        public async Task DeletePost(int id)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
