@@ -3,7 +3,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 
-namespace CodeJournalApi.Data
+namespace CodeJournalApi
 {
     public class Context
     {

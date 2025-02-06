@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using CodeJournalApi.Data.Services;
+using CodeJournalApi.Services;
 using CodeJournalApi.DTOs;
+using CodeJournalApi.Entities;
 
-namespace CodeJournalApi.Controllers
+namespace CodeJournalApi.Controllers.Posts
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,6 +30,27 @@ namespace CodeJournalApi.Controllers
             PostDTO post = await _postService.GetPostById(id);
             var returnValue = new { status = "success", post };
             return Ok(returnValue);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> InsertPost([FromBody] PostDTO postDto)
+        {
+            await _postService.InsertPost(postDto);
+            return Ok(new { status = "success", message = "Post Created"});
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            await _postService.DeletePost(id);
+            return Ok(new { status = "success", message = "Post Delete"});
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] PostDTO postDto)
+        {
+            await _postService.UpdatePost(id, postDto);
+            return Ok(new { message = "Post Updated"});
         }
     }
 }

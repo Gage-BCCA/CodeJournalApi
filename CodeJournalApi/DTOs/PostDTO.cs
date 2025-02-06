@@ -3,9 +3,9 @@ namespace CodeJournalApi.DTOs
     public class PostDTO 
     {
         public int PostId { get; set; }
-        public String Title { get; set; }
-        public String Blurb { get; set; }
-        public String Content {get; set; }
+        public string Title { get; set; }
+        public string Blurb { get; set; }
+        public string Content {get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
         public int LikeCount { get; set; }

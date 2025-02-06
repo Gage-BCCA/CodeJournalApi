@@ -1,7 +1,7 @@
 using Dapper;
 using CodeJournalApi.Entities;
 
-namespace CodeJournalApi.Data.Repositories
+namespace CodeJournalApi.Repositories
 {
     
     public interface IPostRepository
@@ -11,7 +11,6 @@ namespace CodeJournalApi.Data.Repositories
         Task InsertPost(Post post);
         Task DeletePost(int id);
         Task UpdatePost(Post post);
-        // void Save();
     }
 
     public class PostRepository : IPostRepository
@@ -60,6 +59,7 @@ namespace CodeJournalApi.Data.Repositories
                 INNER JOIN Projects ON Posts.ParentProjectId = Projects.ProjectId
                 WHERE PostId = @id
             ";
+            
             return await connection.QuerySingleAsync<Post>(sql, new { id });
         }
 
@@ -69,8 +69,8 @@ namespace CodeJournalApi.Data.Repositories
             post.DateCreated = DateTime.Now;
             post.Status = "Created";
             var sql = @"
-                INSERT INTO Posts (Title, Language, Description, DateCreated, Status)
-                VALUES (@Title, @Language, @Description, @DateCreated, @Status)
+                INSERT INTO Posts (Title, Blurb, Content, ParentProjectId)
+                VALUES (@Title, @Blurb, @Content, @ParentProjectId)
             ";
             await connection.ExecuteAsync(sql, post);
         }
@@ -80,10 +80,19 @@ namespace CodeJournalApi.Data.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 UPDATE Posts
-                SET Title=@Title, Language=@Language, Description=@Description
+                SET Title=@Title, Blurb=@Blurb, Content=@Content, DateModified=@DateModified
                 WHERE PostId=@PostId
             ";
-            await connection.ExecuteAsync(sql, post);
+            var parameters = new 
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Blurb = post.Blurb,
+                Content = post.Content,
+                DateModified = DateTime.Now
+
+            };
+            await connection.ExecuteAsync(sql, parameters);
         }
 
         public async Task DeletePost(int id)

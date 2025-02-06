@@ -1,16 +1,16 @@
 using CodeJournalApi.Entities;
-using CodeJournalApi.Data.Repositories;
+using CodeJournalApi.Repositories;
 using CodeJournalApi.DTOs;
 
-namespace CodeJournalApi.Data.Services 
+namespace CodeJournalApi.Services 
 {
     public interface IPostService
     {
         Task<IEnumerable<PostDTO>> GetAllPosts();
         Task<PostDTO> GetPostById(int id);
-        // Task Insert(PostDTO newObject);
-        // Task Delete(int id);
-        // Task Update(PostDTO targetObject);
+        Task InsertPost(PostDTO newObject);
+        Task DeletePost(int id);
+        Task UpdatePost(int id, PostDTO targetObject);
         // void Save();
     }
 
@@ -53,7 +53,7 @@ namespace CodeJournalApi.Data.Services
 
         public async Task<PostDTO> GetPostById(int id)
         {
-            // Get Project Entity and Convert to DTO
+            // Get Post Entity and Convert to DTO
             Post post = await _postRepo.GetPostById(id);
             PostDTO dto = new PostDTO
             {
@@ -70,37 +70,36 @@ namespace CodeJournalApi.Data.Services
             return dto;
         }
 
-        // public async Task Insert(PostDTO PostDTO)
-        // {
-        //     // Take Project DTO and convert to Project Entity
-        //     Project project = new Project 
-        //     {
-        //         ProjectId = PostDTO.ProjectId,
-        //         Title = PostDTO.Title,
-        //         Language = PostDTO.Language,
-        //         Description = PostDTO.Description
-        //     };
+        public async Task InsertPost(PostDTO postDto)
+        {
+            Post post = new Post()
+            {
+                Title = postDto.Title,
+                Blurb = postDto.Blurb,
+                Content = postDto.Content,
+                ParentProjectId = postDto.ParentProjectId
+            };
 
-        //     await _postRepo.Insert(project);
-        // }
+            await _postRepo.InsertPost(post);
+        }
 
-        // public async Task Update(PostDTO PostDTO)
-        // {
-        //     // Take Project DTO and convert to Project Entity
-        //     Project project = new Project 
-        //     {
-        //         ProjectId = PostDTO.ProjectId,
-        //         Title = PostDTO.Title,
-        //         Language = PostDTO.Language,
-        //         Description = PostDTO.Description
-        //     };
-        //     await _postRepo.Update(project);
-        // }
+        public async Task UpdatePost(int id, PostDTO postDto)
+        {
+            // Take Project DTO and convert to Project Entity
+            Post post = new Post()
+            {
+                PostId = id,
+                Title = postDto.Title,
+                Blurb = postDto.Blurb,
+                Content = postDto.Content,
+            };
+            await _postRepo.UpdatePost(post);
+        }
 
-        // public async Task Delete(int id)
-        // {
-        //     await _postRepo.Delete(id);
-        // }
+        public async Task DeletePost(int id)
+        {
+            await _postRepo.DeletePost(id);
+        }
         
     
     }

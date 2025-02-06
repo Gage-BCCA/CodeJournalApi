@@ -1,12 +1,14 @@
 using CodeJournalApi.Entities;
 using Dapper;
+using Microsoft.IdentityModel.Tokens;
 
-namespace CodeJournalApi.Data.Repositories
+namespace CodeJournalApi.Repositories
 {
     public interface IProjectRepository
     {
         Task<IEnumerable<Project>> GetAllProjects();
-        Task<Project> GetById(int id);
+        Task<Project> GetProjectById(int id);
+        Task<IEnumerable<Post>> GetProjectChildPostsById(int id);
         Task InsertProject(Project project);
         Task DeleteProject(int id);
         Task UpdateProject(Project project);
@@ -32,7 +34,7 @@ namespace CodeJournalApi.Data.Repositories
             return await connection.QueryAsync<Project>(sql);
         }
 
-        public async Task<Project> GetById(int id)
+        public async Task<Project> GetProjectById(int id)
         {
             using var connection = _context.CreateConnection();
             var sql = @"
@@ -40,7 +42,18 @@ namespace CodeJournalApi.Data.Repositories
                 FROM Projects
                 WHERE ProjectId = @id
             ";
-            return await connection.QuerySingleAsync<Project>(sql, new { id });
+            return await connection.QuerySingleOrDefaultAsync<Project>(sql, new { id = id });
+        }
+
+        public async Task<IEnumerable<Post>> GetProjectChildPostsById(int id)
+        {
+            using var connection = _context.CreateConnection();
+            var sql = @"
+                SELECT *
+                FROM Posts
+                WHERE ParentProjectId = @id
+            ";
+            return await connection.QueryAsync<Post>(sql, new { id });
         }
 
         public async Task InsertProject(Project project)

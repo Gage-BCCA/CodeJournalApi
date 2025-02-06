@@ -1,8 +1,8 @@
-using CodeJournalApi.Data.Services;
+using CodeJournalApi.Services;
 using CodeJournalApi.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CodeJournalApi.Controllers
+namespace CodeJournalApi.Controllers.Projects
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,6 +29,13 @@ namespace CodeJournalApi.Controllers
             return Ok(project);
         }
 
+        [HttpGet("{id}/all")]
+        public async Task<IActionResult> GetPostsByProjectId(int id)
+        {
+            ProjectDetailsDTO projectDetails = await _projectService.GetProjectDetailsById(id);
+            return Ok(projectDetails);
+        }
+
         [HttpPost]
         public async Task<IActionResult> InsertProject([FromBody] ProjectDTO projectDto)
         {
@@ -49,6 +56,7 @@ namespace CodeJournalApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            // TODO: Handle this part on the service layer
             projectDto.ProjectId = id;
             await _projectService.UpdateProject(projectDto);
             return Ok(new { status="success", message = "Project Updated"});

@@ -1,6 +1,6 @@
-using CodeJournalApi.Data;
-using CodeJournalApi.Data.Repositories;
-using CodeJournalApi.Data.Services;
+using CodeJournalApi.Repositories;
+using CodeJournalApi.Services;
+using CodeJournalApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
