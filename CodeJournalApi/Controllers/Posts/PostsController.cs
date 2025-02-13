@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CodeJournalApi.Services;
 using CodeJournalApi.DTOs;
 using CodeJournalApi.Entities;
+using CodeJournalApi.Repositories;
 
 namespace CodeJournalApi.Controllers.Posts
 {
@@ -28,7 +29,7 @@ namespace CodeJournalApi.Controllers.Posts
         public async Task<IActionResult> GetPostById(int id)
         {
             PostDTO post = await _postService.GetPostById(id);
-            var returnValue = new { status = "success", post };
+            var returnValue = new {status = "success", post };
             return Ok(returnValue);
         }
 

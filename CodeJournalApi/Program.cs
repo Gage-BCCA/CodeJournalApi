@@ -10,6 +10,16 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<Context>();
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:5030")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -28,6 +38,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+app.UseCors("AllowLocalhost");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
