@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CodeJournalApi.Services;
 using CodeJournalApi.DTOs;
-using CodeJournalApi.Entities;
-using CodeJournalApi.Repositories;
 
 namespace CodeJournalApi.Controllers.Posts
 {
@@ -52,6 +50,13 @@ namespace CodeJournalApi.Controllers.Posts
         {
             await _postService.UpdatePost(id, postDto);
             return Ok(new { message = "Post Updated"});
+        }
+
+        [HttpGet("summaries")]
+        public async Task<IActionResult> GetAllPostSummaries()
+        {
+            IEnumerable<PostSummaryDTO> postSummaries = await _postService.GetAllPostSummaries();
+            return Ok(new { status = "success", postSummaries=postSummaries});
         }
     }
 }

@@ -13,6 +13,5 @@ namespace CodeJournalApi.Entities
 
         public Project() {} // Empty Constructor for Dapper deserialization
     }
-
-
+    
 }

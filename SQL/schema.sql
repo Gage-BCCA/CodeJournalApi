@@ -1,0 +1,30 @@
+CREATE TABLE Projects (
+    ProjectId INT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Language VARCHAR(100) NOT NULL,
+    Description TEXT NOT NULL,
+    DateCreated DATETIME NOT NULL,
+    Status VARCHAR(50),
+    GithubLink VARCHAR(255)
+);
+
+CREATE TABLE Posts (
+    PostId INT PRIMARY KEY IDENTITY(1,1),
+    Title VARCHAR(255) NOT NULL,
+    Blurb VARCHAR(500) NULL,
+    Content TEXT NOT NULL,
+    DateCreated DATETIME NOT NULL DEFAULT GETDATE(),
+    DateModified DATETIME NULL,
+    Slug VARCHAR(255) UNIQUE NOT NULL,
+    LikeCount INT NOT NULL DEFAULT 0,
+    DislikeCount INT NOT NULL DEFAULT 0,
+    Status VARCHAR(50) NULL,
+    ParentProjectId INT NULL,
+    FOREIGN KEY (ParentProjectId) REFERENCES Projects(ProjectId) ON DELETE CASCADE
+);
+
+CREATE TABLE Tags (
+    TagId INT PRIMARY KEY IDENTITY(1,1)
+    Tag VARCHAR(25) NOT NULL,
+    FOREIGN KEY (ParentPostId) REFERENCES Posts(PostId) ON DELETE CASCADE 
+);

@@ -1,6 +1,7 @@
 using CodeJournalApi.Entities;
 using CodeJournalApi.Repositories;
 using CodeJournalApi.DTOs;
+using System.Reflection.Metadata.Ecma335;
 
 namespace CodeJournalApi.Services 
 {
@@ -11,6 +12,7 @@ namespace CodeJournalApi.Services
         Task InsertPost(PostDTO newObject);
         Task DeletePost(int id);
         Task UpdatePost(int id, PostDTO targetObject);
+        Task<IEnumerable<PostSummaryDTO>> GetAllPostSummaries();
         // void Save();
     }
 
@@ -100,7 +102,31 @@ namespace CodeJournalApi.Services
         {
             await _postRepo.DeletePost(id);
         }
-        
+
+        public async Task<IEnumerable<PostSummaryDTO>> GetAllPostSummaries()
+        {
+            IEnumerable<Post> posts = await _postRepo.GetAllPosts();
+
+            List<PostSummaryDTO> postSummaries = new List<PostSummaryDTO>();
+
+            foreach (Post post in posts)
+            {
+                PostSummaryDTO summary = new PostSummaryDTO 
+                {
+                    PostId = post.PostId,
+                    Title = post.Title,
+                    Blurb = post.Blurb,
+                    DateCreated = post.DateCreated,
+                    LikeCount = post.LikeCount
+                };
+
+                postSummaries.Add(summary);
+            }
+
+            return postSummaries;
+        }
+
+               
     
     }
 }

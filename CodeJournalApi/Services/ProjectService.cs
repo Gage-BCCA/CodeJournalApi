@@ -15,6 +15,7 @@ namespace CodeJournalApi.Services
         Task UpdateProject(ProjectDTO targetObject);
         // void Save();
     }
+
     public class ProjectService: IProjectService
     {
         private IProjectRepository _projectRepo;
@@ -128,5 +129,7 @@ namespace CodeJournalApi.Services
         {
             await _projectRepo.DeleteProject(id);
         }
+
     }
+    
 }
