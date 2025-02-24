@@ -2,7 +2,7 @@
 This is the backend to my coding journal. Here's what I made it with:
 
 - ASP.NET Core
-- SQL Server
+- Postgres
 - Dapper
 - Lots of tears, sweat, blood, trial, and error
 
@@ -12,21 +12,22 @@ the database, the service classes interface with the repositories and get consum
 ## Controllers
 The main controllers define the end points for projects and posts. It's the entry point to the API.
 
-## Data
-The Data folder is my generic container for all things database-related. 
-
-### Data Models
-The models for all the entries in my tables.
-
-### Repositories
+## Repositories
 Contains classes that actually contain database access code, like SQL. Interfaces with the Context class
 to open and use connections to the database.
 
-### Services
+## Services
 These are "controller" classes that the rest of the application uses. These classes interface with the
 repository classes to get data, but they do not ever actually touch the data store and are not concerned
 with the underlying implementation.
 
-### Context.cs
-This is my database class. It contains a method for opening a connection and for initializing the database 
-if it does not already exist.
+## Entities
+The models for all the entries in my tables. These are used by the repositories to map a SQL result to strongly typed
+C# objects.
+
+## DTOs
+The modified entities that are ready for transport over the wire. For example, when you retrieve a list of all posts,
+I only send the ```PostSummaryDTO``` object, instead of the entirety of the post when it is not needed. Some fields in the database aren't needed,
+either, so they are not included. The DTOs are created in the service layer.
+
+
