@@ -19,14 +19,14 @@ namespace CodeJournalApi.Controllers.Projects
         public async Task<IActionResult> GetAllProjects()
         {
             var projects = await _projectService.GetAllProjects();
-            return Ok(projects);
+            return Ok(new {status = "success", projects});
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(int id)
         {
             var project = await _projectService.GetProjectById(id);
-            return Ok(project);
+            return Ok(new { status="success", project });
         }
 
         [HttpGet("{id}/all")]
@@ -37,19 +37,19 @@ namespace CodeJournalApi.Controllers.Projects
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertProject([FromBody] ProjectDTO projectDto)
+        public async Task<IActionResult> InsertProject([FromBody] ProjectSummaryDTO projectSummaryDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            await _projectService.InsertProject(projectDto);
+            await _projectService.InsertProject(projectSummaryDTO);
             return Ok(new { message = "Project Created" });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject([FromBody] ProjectDTO projectDto, int id)
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectSummaryDTO projectSummaryDTO, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -57,8 +57,8 @@ namespace CodeJournalApi.Controllers.Projects
             }
 
             // TODO: Handle this part on the service layer
-            projectDto.ProjectId = id;
-            await _projectService.UpdateProject(projectDto);
+            projectSummaryDTO.Id = id;
+            await _projectService.UpdateProject(projectSummaryDTO);
             return Ok(new { status="success", message = "Project Updated"});
         }
 

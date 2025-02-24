@@ -2,7 +2,7 @@ namespace CodeJournalApi.Entities
 {
     public class Project
     {
-        public int ProjectId { get; set; }
+        public int Id { get; set; }
         public required string Title { get; set; }
         public required string Language { get; set; }
         public required string Description { get; set; }

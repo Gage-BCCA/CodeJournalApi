@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.Extensions.Options;
 
 namespace CodeJournalApi
@@ -19,7 +19,7 @@ namespace CodeJournalApi
         }
 
         public IDbConnection CreateConnection()
-            => new SqlConnection(_connectionString);
+            => new NpgsqlConnection(_connectionString);
 
         public async Task Init()
         {
@@ -28,9 +28,9 @@ namespace CodeJournalApi
 
         private async Task _initDatabase()
         {
-            var connection = CreateConnection();
-            var sql = $"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_database}') CREATE DATABASE [{_database}];";
-            await connection.ExecuteAsync(sql);
+            // var connection = CreateConnection();
+            // var sql = $"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_database}') CREATE DATABASE [{_database}];";
+            // await connection.ExecuteAsync(sql);
         }
     }
 }

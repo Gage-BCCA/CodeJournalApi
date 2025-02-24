@@ -15,12 +15,22 @@ namespace CodeJournalApi.Controllers.Posts
             _postService = postService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllPosts()
         {
-            IEnumerable<PostDTO> posts = await _postService.GetAllPosts();
-            var returnValue = new { status = "success", posts };
-            return Ok(returnValue);
+            IEnumerable<PostSummaryDTO> postSummaries = await _postService.GetAllPosts();
+            return Ok( new {status = "success", postSummaries=postSummaries} );
+        }
+
+        [HttpGet("parent-project")]
+        public async Task<IActionResult> GetPostsByProjectId([FromQuery] int projectId)
+        {
+            if (projectId == 0 || projectId == null)
+            {
+                return Ok( new { status = "error", message = "No project ID was provided" });
+            }
+            IEnumerable<PostSummaryDTO> postSummaries = await _postService.GetPostsByProjectId(projectId);
+            return Ok( new { status = "success", postSummaries=postSummaries });
         }
 
         [HttpGet("{id}")]
@@ -56,7 +66,14 @@ namespace CodeJournalApi.Controllers.Posts
         public async Task<IActionResult> GetAllPostSummaries()
         {
             IEnumerable<PostSummaryDTO> postSummaries = await _postService.GetAllPostSummaries();
-            return Ok(new { status = "success", postSummaries=postSummaries});
+            return Ok(new { status = "success", postSummaries=postSummaries });
+        }
+
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentPostSummaries() 
+        {
+            IEnumerable<PostSummaryDTO> postSummaries = await _postService.GetRecentPostSummaries();
+            return Ok( new { status = "success", postSummaries=postSummaries });
         }
     }
 }

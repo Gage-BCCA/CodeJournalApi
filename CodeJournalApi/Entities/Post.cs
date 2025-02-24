@@ -2,7 +2,7 @@ namespace CodeJournalApi.Entities
 {
     public class Post
     {
-        public int PostId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Blurb { get; set; }
         public string Content {get; set; }

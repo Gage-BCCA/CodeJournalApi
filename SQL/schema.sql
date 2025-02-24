@@ -1,30 +1,29 @@
-CREATE TABLE Projects (
-    ProjectId INT PRIMARY KEY,
-    Title VARCHAR(255) NOT NULL,
-    Language VARCHAR(100) NOT NULL,
-    Description TEXT NOT NULL,
-    DateCreated DATETIME NOT NULL,
-    Status VARCHAR(50),
-    GithubLink VARCHAR(255)
+CREATE TABLE projects (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    language TEXT NOT NULL,
+    description TEXT NOT NULL,
+    date_created TIMESTAMP NOT NULL,
+    status TEXT,
+    github_link VARCHAR(255)
 );
 
-CREATE TABLE Posts (
-    PostId INT PRIMARY KEY IDENTITY(1,1),
-    Title VARCHAR(255) NOT NULL,
-    Blurb VARCHAR(500) NULL,
-    Content TEXT NOT NULL,
-    DateCreated DATETIME NOT NULL DEFAULT GETDATE(),
-    DateModified DATETIME NULL,
-    Slug VARCHAR(255) UNIQUE NOT NULL,
-    LikeCount INT NOT NULL DEFAULT 0,
-    DislikeCount INT NOT NULL DEFAULT 0,
-    Status VARCHAR(50) NULL,
-    ParentProjectId INT NULL,
-    FOREIGN KEY (ParentProjectId) REFERENCES Projects(ProjectId) ON DELETE CASCADE
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    blurb TEXT NULL,
+    content TEXT NOT NULL,
+    date_created TIMESTAMP NOT NULL DEFAULT NOW(),
+    date_modified TIMESTAMP NULL DEFAULT NOW(),
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    like_count INT NOT NULL DEFAULT 0,
+    dislike_count INT NOT NULL DEFAULT 0,
+    status TEXT NULL,
+    parent_project_id INT NOT NULL REFERENCES projects (id) ON DELETE CASCADE
 );
 
-CREATE TABLE Tags (
-    TagId INT PRIMARY KEY IDENTITY(1,1)
-    Tag VARCHAR(25) NOT NULL,
-    FOREIGN KEY (ParentPostId) REFERENCES Posts(PostId) ON DELETE CASCADE 
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    tag VARCHAR(25) NOT NULL,
+    parent_project_id INT NOT NULL REFERENCES projects (id) ON DELETE CASCADE
 );

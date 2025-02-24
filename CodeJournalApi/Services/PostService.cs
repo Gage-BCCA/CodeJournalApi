@@ -7,13 +7,15 @@ namespace CodeJournalApi.Services
 {
     public interface IPostService
     {
-        Task<IEnumerable<PostDTO>> GetAllPosts();
+        Task<IEnumerable<PostSummaryDTO>> GetAllPosts();
+        Task<IEnumerable<PostSummaryDTO>> GetAllPostSummaries();
+        Task<IEnumerable<PostSummaryDTO>> GetRecentPostSummaries();
+        Task<IEnumerable<PostSummaryDTO>> GetPostsByProjectId(int id);
         Task<PostDTO> GetPostById(int id);
         Task InsertPost(PostDTO newObject);
         Task DeletePost(int id);
         Task UpdatePost(int id, PostDTO targetObject);
-        Task<IEnumerable<PostSummaryDTO>> GetAllPostSummaries();
-        // void Save();
+ 
     }
 
     public class PostService : IPostService
@@ -25,32 +27,17 @@ namespace CodeJournalApi.Services
             _postRepo = postRepo;
         }
 
-        public async Task<IEnumerable<PostDTO>> GetAllPosts()
+        public async Task<IEnumerable<PostSummaryDTO>> GetAllPosts()
         {
             // Get All Project Entities and convert to Project DTOs
-            IEnumerable<Post> postEntities = await _postRepo.GetAllPosts();
+            IEnumerable<Post> posts = await _postRepo.GetAllPosts();
+            return ConstructPostSummariesFromPosts(posts);
+        }
 
-            List<PostDTO> PostDTOs = new List<PostDTO>();
-
-            foreach (Post post in postEntities)
-            {
-                PostDTO dto = new PostDTO
-                {
-                    PostId = post.PostId,
-                    Title = post.Title,
-                    Blurb = post.Blurb,
-                    Content = post.Content,
-                    DateCreated = post.DateCreated,
-                    LikeCount = post.LikeCount,
-                    DislikeCount = post.DislikeCount,
-                    ParentProjectTitle = post.ParentProjectTitle,
-                    ParentProjectId = post.ParentProjectId
-                };
-
-                PostDTOs.Add(dto);
-            }
-
-            return PostDTOs;
+        public async Task<IEnumerable<PostSummaryDTO>> GetPostsByProjectId(int id)
+        {
+            IEnumerable<Post> posts = await _postRepo.GetPostsByProjectId(id);
+            return ConstructPostSummariesFromPosts(posts);
         }
 
         public async Task<PostDTO> GetPostById(int id)
@@ -59,7 +46,7 @@ namespace CodeJournalApi.Services
             Post post = await _postRepo.GetPostById(id);
             PostDTO dto = new PostDTO
             {
-                    PostId = post.PostId,
+                    Id = post.Id,
                     Title = post.Title,
                     Blurb = post.Blurb,
                     Content = post.Content,
@@ -90,7 +77,7 @@ namespace CodeJournalApi.Services
             // Take Project DTO and convert to Project Entity
             Post post = new Post()
             {
-                PostId = id,
+                Id = id,
                 Title = postDto.Title,
                 Blurb = postDto.Blurb,
                 Content = postDto.Content,
@@ -103,17 +90,30 @@ namespace CodeJournalApi.Services
             await _postRepo.DeletePost(id);
         }
 
+        // TODO: Remove this. This is a duplicate function. Whoops.
         public async Task<IEnumerable<PostSummaryDTO>> GetAllPostSummaries()
         {
             IEnumerable<Post> posts = await _postRepo.GetAllPosts();
+            return ConstructPostSummariesFromPosts(posts);
+        }
 
+
+        public async Task<IEnumerable<PostSummaryDTO>> GetRecentPostSummaries()
+        {
+            IEnumerable<Post> posts = await _postRepo.GetRecentPosts();
+            return ConstructPostSummariesFromPosts(posts);
+        }
+
+
+        private List<PostSummaryDTO> ConstructPostSummariesFromPosts(IEnumerable<Post> posts) 
+        {
             List<PostSummaryDTO> postSummaries = new List<PostSummaryDTO>();
 
             foreach (Post post in posts)
             {
                 PostSummaryDTO summary = new PostSummaryDTO 
                 {
-                    PostId = post.PostId,
+                    Id = post.Id,
                     Title = post.Title,
                     Blurb = post.Blurb,
                     DateCreated = post.DateCreated,
@@ -124,9 +124,7 @@ namespace CodeJournalApi.Services
             }
 
             return postSummaries;
-        }
-
-               
+        }   
     
     }
 }

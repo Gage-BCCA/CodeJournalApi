@@ -7,12 +7,12 @@ namespace CodeJournalApi.Services
 
     public interface IProjectService
     {
-        Task<IEnumerable<ProjectDTO>> GetAllProjects();
-        Task<ProjectDTO> GetProjectById(int id);
+        Task<IEnumerable<ProjectSummaryDTO>> GetAllProjects();
+        Task<ProjectSummaryDTO> GetProjectById(int id);
         Task<ProjectDetailsDTO> GetProjectDetailsById(int id);
-        Task InsertProject(ProjectDTO newObject);
+        Task InsertProject(ProjectSummaryDTO newObject);
         Task DeleteProject(int id);
-        Task UpdateProject(ProjectDTO targetObject);
+        Task UpdateProject(ProjectSummaryDTO targetObject);
         // void Save();
     }
 
@@ -25,35 +25,35 @@ namespace CodeJournalApi.Services
             _projectRepo = projectRepo;
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAllProjects()
+        public async Task<IEnumerable<ProjectSummaryDTO>> GetAllProjects()
         {
             // Get All Project Entities and convert to Project DTOs
-            IEnumerable<Project> projectEntities = await _projectRepo.GetAllProjects();
-            List<ProjectDTO> projectDTOs = new List<ProjectDTO>();
+            IEnumerable<Project> projects = await _projectRepo.GetAllProjects();
+            List<ProjectSummaryDTO> projectSummaries = new List<ProjectSummaryDTO>();
 
-            foreach (Project project in projectEntities)
+            foreach (Project project in projects)
             {
-                ProjectDTO dto = new ProjectDTO
+                ProjectSummaryDTO dto = new ProjectSummaryDTO
                 {
-                    ProjectId = project.ProjectId,
+                    Id = project.Id,
                     Title = project.Title,
                     Language = project.Language,
                     Description = project.Description
                 };
 
-                projectDTOs.Add(dto);
+                projectSummaries.Add(dto);
             }
 
-            return projectDTOs;
+            return projectSummaries;
         }
 
-        public async Task<ProjectDTO> GetProjectById(int id)
+        public async Task<ProjectSummaryDTO> GetProjectById(int id)
         {
             // Get Project Entity and Convert to DTO
             Project project = await _projectRepo.GetProjectById(id);
-            ProjectDTO dto = new ProjectDTO
+            ProjectSummaryDTO dto = new ProjectSummaryDTO
             {
-                ProjectId = project.ProjectId,
+                Id = project.Id,
                 Title = project.Title,
                 Language = project.Language,
                 Description = project.Description
@@ -73,7 +73,7 @@ namespace CodeJournalApi.Services
             {
                 PostSummaryDTO dto = new PostSummaryDTO
                 {
-                    PostId = post.PostId,
+                    Id = post.Id,
                     Title = post.Title,
                     Blurb = post.Blurb,
                     DateCreated = post.DateCreated,
@@ -84,7 +84,7 @@ namespace CodeJournalApi.Services
 
             ProjectDetailsDTO projectDetails = new ProjectDetailsDTO 
             {
-                ProjectId = project.ProjectId,
+                Id = project.Id,
                 Title = project.Title,
                 Language = project.Language,
                 Description = project.Description,
@@ -98,12 +98,12 @@ namespace CodeJournalApi.Services
 
         }
 
-        public async Task InsertProject(ProjectDTO projectDto)
+        public async Task InsertProject(ProjectSummaryDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
             {
-                ProjectId = projectDto.ProjectId,
+                Id = projectDto.Id,
                 Title = projectDto.Title,
                 Language = projectDto.Language,
                 Description = projectDto.Description
@@ -112,12 +112,12 @@ namespace CodeJournalApi.Services
             await _projectRepo.InsertProject(project);
         }
 
-        public async Task UpdateProject(ProjectDTO projectDto)
+        public async Task UpdateProject(ProjectSummaryDTO projectDto)
         {
             // Take Project DTO and convert to Project Entity
             Project project = new Project 
             {
-                ProjectId = projectDto.ProjectId,
+                Id = projectDto.Id,
                 Title = projectDto.Title,
                 Language = projectDto.Language,
                 Description = projectDto.Description

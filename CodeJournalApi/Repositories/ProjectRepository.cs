@@ -29,7 +29,7 @@ namespace CodeJournalApi.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 SELECT *
-                FROM Projects
+                FROM projects
             ";
             return await connection.QueryAsync<Project>(sql);
         }
@@ -39,8 +39,8 @@ namespace CodeJournalApi.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 SELECT *
-                FROM Projects
-                WHERE ProjectId = @id
+                FROM projects
+                WHERE id = @id
             ";
             return await connection.QuerySingleOrDefaultAsync<Project>(sql, new { id = id });
         }
@@ -50,8 +50,8 @@ namespace CodeJournalApi.Repositories
             using var connection = _context.CreateConnection();
             var sql = @"
                 SELECT *
-                FROM Posts
-                WHERE ParentProjectId = @id
+                FROM posts
+                WHERE parent_project_id = @id
             ";
             return await connection.QueryAsync<Post>(sql, new { id });
         }
@@ -62,7 +62,7 @@ namespace CodeJournalApi.Repositories
             project.DateCreated = DateTime.Now;
             project.Status = "Created";
             var sql = @"
-                INSERT INTO Projects (Title, Language, Description, DateCreated, Status)
+                INSERT INTO projects (title, language, description, date_created, status)
                 VALUES (@Title, @Language, @Description, @DateCreated, @Status)
             ";
             await connection.ExecuteAsync(sql, project);
@@ -72,9 +72,9 @@ namespace CodeJournalApi.Repositories
         {
             using var connection = _context.CreateConnection();
             var sql = @"
-                UPDATE Projects
-                SET Title=@Title, Language=@Language, Description=@Description
-                WHERE ProjectId=@ProjectId
+                UPDATE projects
+                SET title=@Title, language=@Language, description=@Description
+                WHERE id=@Id
             ";
             await connection.ExecuteAsync(sql, project);
         }
@@ -83,10 +83,10 @@ namespace CodeJournalApi.Repositories
         {
             using var connection = _context.CreateConnection();
             var sql = @"
-                DELETE FROM Projects
-                WHERE ProjectId=@ProjectId
+                DELETE FROM projects
+                WHERE id=@Id
             ";
-            await connection.ExecuteAsync(sql, new { ProjectId=id });
+            await connection.ExecuteAsync(sql, new { Id=id });
         }
     }
 }
