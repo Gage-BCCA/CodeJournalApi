@@ -45,21 +45,24 @@ namespace CodeJournalApi.Controllers.Posts
         public async Task<IActionResult> InsertPost([FromBody] PostDTO postDto)
         {
             await _postService.InsertPost(postDto);
-            return Ok(new { status = "success", message = "Post Created"});
+            //return Ok(new { status = "success", message = "Post Created"});
+            return Forbid();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
             await _postService.DeletePost(id);
-            return Ok(new { status = "success", message = "Post Delete"});
+            //return Ok(new { status = "success", message = "Post Delete"});
+            return Forbid();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] PostDTO postDto)
         {
             await _postService.UpdatePost(id, postDto);
-            return Ok(new { message = "Post Updated"});
+            //return Ok(new { message = "Post Updated"});
+            return Forbid();
         }
 
         [HttpGet("summaries")]

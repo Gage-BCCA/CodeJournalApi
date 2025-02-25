@@ -12,9 +12,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5030")
+        policy.WithOrigins("https://dotjournal.failedalgorithm.com")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -38,13 +38,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.UseCors("AllowLocalhost");
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

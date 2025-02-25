@@ -45,7 +45,8 @@ namespace CodeJournalApi.Controllers.Projects
             }
 
             await _projectService.InsertProject(projectSummaryDTO);
-            return Ok(new { message = "Project Created" });
+            //return Ok(new { message = "Project Created" });
+            return Forbid();
         }
 
         [HttpPut("{id}")]
@@ -59,14 +60,16 @@ namespace CodeJournalApi.Controllers.Projects
             // TODO: Handle this part on the service layer
             projectSummaryDTO.Id = id;
             await _projectService.UpdateProject(projectSummaryDTO);
-            return Ok(new { status="success", message = "Project Updated"});
+            //return Ok(new { status="success", message = "Project Updated"});
+            return Forbid();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
             await _projectService.DeleteProject(id);
-            return Ok(new { status="success", message = "Project Deleted"});
+            //return Ok(new { status="success", message = "Project Deleted"});
+            return Forbid();
         }
     }
 }
